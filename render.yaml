@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: personal-video-downloader
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /healthz
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: APP_USERNAME
+        sync: false
+      - key: APP_PASSWORD_HASH
+        sync: false
+      - key: MAX_CONCURRENT_DOWNLOADS
+        value: "1"
+      - key: DEFAULT_OPTION_PLAYLIST_ITEM_LIMIT
+        value: "1"
+      - key: ALLOW_YTDL_OPTIONS_OVERRIDES
+        value: "false"
+      - key: ALLOW_PRIVATE_ADDRESSES
+        value: "false"
+      - key: DOWNLOAD_DIRS_INDEXABLE
+        value: "false"

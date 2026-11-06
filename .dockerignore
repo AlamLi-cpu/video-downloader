@@ -1,0 +1,9 @@
+README.md
+render.yaml
+.git
+*.zip
+__pycache__
+*.pyc
+.env
+*.log
+cookies.txt
