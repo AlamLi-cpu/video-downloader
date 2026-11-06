@@ -5,7 +5,7 @@ FROM ghcr.io/alexta69/metube:latest
 COPY --from=caddy /usr/bin/caddy /usr/local/bin/caddy
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY start.py /opt/render/start.py
-COPY zh-cn.js localize.py /opt/render/
+COPY zh-cn.js share-url.js localize.py /opt/render/
 RUN python3 /opt/render/localize.py
 
 ENV PORT=10000 \

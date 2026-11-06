@@ -68,6 +68,9 @@
   function translate(value) {
     const key = value.trim().replace(/\s+/g, ' ');
     let result = dictionary[key];
+    if (/^Error adding URL: URL scheme .* is not allowed/.test(key)) {
+      result = '没有识别到有效链接。请复制含 https:// 的完整视频分享链接，再试一次。';
+    }
     if (!result) {
       const match = key.match(/^(\d+) (downloading|queued|completed|failed)$/);
       if (match) result = match[1] + ' 个' + ({downloading:'正在下载', queued:'等待中', completed:'已完成', failed:'失败'})[match[2]];
