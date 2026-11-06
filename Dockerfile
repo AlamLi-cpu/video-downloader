@@ -6,9 +6,11 @@ COPY --from=caddy /usr/bin/caddy /usr/local/bin/caddy
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY start.py /opt/render/start.py
 COPY zh-cn.js share-url.js localize.py /opt/render/
+COPY yt_dlp_plugins /opt/render/yt_dlp_plugins
 RUN python3 /opt/render/localize.py
 
-ENV PORT=10000 \
+ENV PYTHONPATH=/opt/render \
+    PORT=10000 \
     MAX_CONCURRENT_DOWNLOADS=1 \
     DEFAULT_OPTION_PLAYLIST_ITEM_LIMIT=1 \
     ALLOW_YTDL_OPTIONS_OVERRIDES=false \
