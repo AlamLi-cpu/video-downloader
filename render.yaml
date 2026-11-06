@@ -10,10 +10,6 @@ services:
     envVars:
       - key: PORT
         value: "10000"
-      - key: APP_USERNAME
-        sync: false
-      - key: APP_PASSWORD_HASH
-        sync: false
       - key: MAX_CONCURRENT_DOWNLOADS
         value: "1"
       - key: DEFAULT_OPTION_PLAYLIST_ITEM_LIMIT

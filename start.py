@@ -1,7 +1,6 @@
-"""Supervise MeTube and its authenticated HTTP proxy in one Render container."""
+"""Supervise MeTube and its HTTP proxy in one Render container."""
 
 import os
-import re
 import signal
 import subprocess
 import sys
@@ -11,14 +10,8 @@ import urllib.request
 
 
 def checked_environment(source):
-    """Reject missing/invalid auth before either server is started."""
+    """Validate the public port before either server is started."""
     env = dict(source)
-    if not re.fullmatch(r"[A-Za-z0-9_-]{3,64}", env.get("APP_USERNAME", "")):
-        raise ValueError("APP_USERNAME must be 3-64 letters, digits, underscores or hyphens")
-    # Caddy expects a bcrypt hash. Constrain cost to avoid accidental CPU exhaustion.
-    if not re.fullmatch(r"\$2[aby]\$(?:10|11|12|13|14)\$[./A-Za-z0-9]{53}",
-                        env.get("APP_PASSWORD_HASH", "")):
-        raise ValueError("APP_PASSWORD_HASH must be a bcrypt hash with cost 10-14")
     port = env.get("PORT", "10000")
     if not port.isascii() or not port.isdigit() or not 1024 <= int(port) <= 65535:
         raise ValueError("PORT must be an integer from 1024 through 65535")
@@ -70,7 +63,7 @@ def main():
         subprocess.run(["caddy", "validate", "--config", "/etc/caddy/Caddyfile",
                         "--adapter", "caddyfile"], env=env, check=True)
         backend_env = dict(env)
-        # Enforce loopback-only backend: the auth proxy is the only public listener.
+        # Enforce loopback-only backend: the proxy is the only public listener.
         backend_env.update(HOST="127.0.0.1", PORT="8081", HTTPS="false",
                            URL_PREFIX="/", PUBLIC_HOST_URL="download/",
                            PUBLIC_HOST_AUDIO_URL="audio_download/",
@@ -106,7 +99,7 @@ def main():
         proxy = subprocess.Popen(["caddy", "run", "--config", "/etc/caddy/Caddyfile",
                                   "--adapter", "caddyfile"], env=env, start_new_session=True)
         children.append(proxy)
-        print("Authenticated video downloader is starting", flush=True)
+        print("Video downloader is starting", flush=True)
         while not stopping:
             for name, child in (("MeTube", backend), ("Caddy", proxy)):
                 if child.poll() is not None:

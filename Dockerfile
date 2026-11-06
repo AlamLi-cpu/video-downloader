@@ -1,7 +1,7 @@
 FROM caddy:2 AS caddy
 FROM ghcr.io/alexta69/metube:latest
 
-# Keep upstream MeTube and its yt-dlp/FFmpeg runtime; add only an auth proxy.
+# Keep upstream MeTube and its yt-dlp/FFmpeg runtime; add a reverse proxy.
 COPY --from=caddy /usr/bin/caddy /usr/local/bin/caddy
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY start.py /opt/render/start.py
